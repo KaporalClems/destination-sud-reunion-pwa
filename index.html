@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destination Sud Réunion</title>
     
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 
-    <!-- PWA Manifest (for "Add to Homescreen") -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#234b98">
 
@@ -122,22 +119,18 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- Animated Loading Screen -->
     <div id="loader">
         <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion">
     </div>
 
-    <!-- Main Application Wrapper -->
     <div id="app" class="opacity-0 transition-opacity duration-500">
         
-        <!-- Header -->
         <header class="bg-white shadow-md sticky top-0 z-40">
             <div class="container mx-auto px-4 py-3 flex justify-between items-center">
                 <a href="#accueil" class="nav-link"><img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo DSR" class="h-10 md:h-12"></a>
                 <button id="menu-button" class="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dsr-dark-blue)]">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
-                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="#accueil" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Accueil</a>
                     <a href="#agenda" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Agenda</a>
@@ -149,7 +142,6 @@
             </div>
         </header>
 
-        <!-- Mobile Menu (Overlay) -->
         <div id="mobile-menu" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
             <div class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl p-6 transform translate-x-full transition-transform duration-300 ease-in-out">
                 <button id="close-menu-button" class="absolute top-4 right-4 p-2">
@@ -166,9 +158,7 @@
             </div>
         </div>
 
-        <!-- Main Content Area -->
         <main>
-            <!-- Page: Accueil -->
             <div id="page-accueil" class="page">
                 <div id="home-carousel">
                     <div class="carousel-image active" style="background-image: url('https://www.sudreuniontourisme.fr/fileadmin/_processed_/9/9/csm_BrasEtangs-VueGdBenare-1_cbb4280c3f.jpg');"></div>
@@ -179,6 +169,12 @@
                         <p class="text-lg text-gray-200 max-w-2xl mx-auto drop-shadow-md">Votre aventure inoubliable à La Réunion commence ici.</p>
                     </div>
                 </div>
+
+                <div class="bg-[var(--dsr-orange)] text-white py-2 px-4 shadow-md overflow-hidden cursor-pointer" id="event-ticker">
+                    <marquee behavior="scroll" direction="left" scrollamount="5" class="text-lg font-semibold whitespace-nowrap">
+                        </marquee>
+                </div>
+
                 <div class="container mx-auto p-4 md:p-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <a href="#hebergements" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
@@ -193,21 +189,46 @@
                             <img src="https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Activité">
                             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Activités</h2></div>
                         </a>
-                         <a href="#visites" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
-                            <img src="https://images.unsplash.com/photo-1590425495221-34539a265436?q=80&w=1964&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Visite">
-                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Visites</h2></div>
+                           <a href="#visites" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
+                                <img src="https://images.unsplash.com/photo-1590425495221-34539a265436?q=80&w=1964&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Visite">
+                                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Visites</h2></div>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Page: Agenda -->
             <div id="page-agenda" class="page hidden-page container mx-auto p-4 md:p-8">
                 <h2 class="text-3xl font-bold mb-8 gradient-text">Agenda des Événements</h2>
                 <div id="agenda-content"></div>
             </div>
 
-            <!-- Other Pages -->
+            <div id="page-brochures" class="page hidden-page container mx-auto p-4 md:p-8">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Nos Brochures Touristiques</h2>
+                <p class="mb-4">Découvrez nos guides et cartes pour organiser au mieux votre séjour dans le Sud de La Réunion.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <img src="https://via.placeholder.com/400x250/24A3DB/FFFFFF?text=Brochure+Generale" alt="Brochure Générale" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Guide du Sud Sauvage</h3>
+                            <p class="text-gray-600 text-sm mb-3">Le guide essentiel pour découvrir toutes les facettes de notre région.</p>
+                            <a href="#" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                <span class="material-symbols-outlined text-base mr-2">download</span> Télécharger PDF
+                            </a>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <img src="https://via.placeholder.com/400x250/D93439/FFFFFF?text=Carte+Rando" alt="Carte Randonnées" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Carte des Sentiers</h3>
+                            <p class="text-gray-600 text-sm mb-3">Pour les amoureux de la nature, découvrez nos meilleurs itinéraires de randonnée.</p>
+                            <a href="#" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                <span class="material-symbols-outlined text-base mr-2">download</span> Télécharger PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="page-hebergements" class="page hidden-page container mx-auto p-4 md:p-8">
                 <h2 class="text-3xl font-bold mb-6 gradient-text">Nos Hébergements</h2>
                 <p>Contenu de la page des hébergements...</p>
@@ -225,9 +246,8 @@
                 <p>Contenu de la page des visites...</p>
             </div>
 
-            <!-- Page: Connexion Professionnel -->
             <div id="page-connexion" class="page hidden-page container mx-auto p-4 md:p-8">
-                 <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
+                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
                     <div class="text-center mb-8">
                         <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo DSR" class="h-12 mx-auto mb-4">
                         <h2 class="text-2xl font-bold text-gray-800">Espace Professionnel</h2>
@@ -248,17 +268,22 @@
             </div>
         </main>
         
-        <!-- Chatbot -->
         <button id="chat-fab" class="fixed bottom-28 right-6 bg-[var(--dsr-dark-blue)] text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-[var(--dsr-light-blue)] transition-transform hover:scale-110 z-40">
             <span class="material-symbols-outlined text-3xl">support_agent</span>
         </button>
+
+        <a href="https://wa.me/262692XXXXXX" id="whatsapp-fab" class="fixed bottom-6 right-6 bg-green-500 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-green-600 transition-transform hover:scale-110 z-40">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.04 2c-5.45 0-9.91 4.46-9.91 9.91 0 1.75.52 3.48 1.49 4.96L2 22l5.24-1.49c1.47.97 3.2 1.49 4.96 1.49 5.45 0 9.91-4.46 9.91-9.91S17.49 2 12.04 2zm3.39 13.6c-.2-.09-1.2-.59-1.39-.66-.18-.08-.3-.12-.4-.12s-.2.0-.6.23c-.4.23-1.55.58-1.9.62-.35.05-.65.1-.9-.12-.25-.23-.98-.36-1.23-1.01-.25-.66-.03-.61.44-1.51.4-.8-.2-1.12-.29-1.28-.09-.17-.2-.12-.29-.12h-.3c-.09 0-.2.04-.3.12s-.39.37-.5.5c-.12.12-.23.23-.34.34-.1.1-.23.23-.34.34-.69.65-.65 1.25-.12 1.34.52.09 1.15.34 1.7.6.54.26 1.04.42 1.35.53.3.1.5.15.7.12.2-.03.59-.24.69-.47.09-.23.09-.42.06-.62 0-.02-.04-.1-.09-.23zm-3.39 4.38c-4.32 0-7.8-3.48-7.8-7.8 0-4.32 3.48-7.8 7.8-7.8 4.32 0 7.8 3.48 7.8 7.8 0 4.32-3.48 7.8-7.8 7.8z"/>
+            </svg>
+        </a>
+
         <div id="chat-window" class="fixed bottom-48 right-6 w-80 h-96 bg-white rounded-xl shadow-2xl flex flex-col hidden z-40">
             <div class="bg-[var(--dsr-dark-blue)] text-white p-3 rounded-t-xl flex justify-between items-center"><h3 class="font-bold">Assistant DSR</h3><button id="close-chat" class="text-white">&times;</button></div>
             <div id="chat-messages" class="flex-1 p-3 overflow-y-auto flex flex-col space-y-2"></div>
             <div class="p-3 border-t"><div class="flex space-x-2"><input type="text" id="chat-input" placeholder="Posez votre question..." class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--dsr-light-blue)]"><button id="chat-send" class="bg-[var(--dsr-orange)] text-white rounded-full p-2"><span class="material-symbols-outlined">send</span></button></div></div>
         </div>
 
-        <!-- Footer -->
         <footer class="bg-[var(--footer-bg)] text-[var(--footer-text)] mt-auto py-10 px-4">
             <div class="container mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left mb-8">
@@ -270,7 +295,7 @@
                     <div>
                         <h4 class="font-bold text-white mb-3">NOS BROCHURES</h4>
                         <p class="text-sm mb-4">De bonnes idées pour votre séjour : sites touristiques, hébergements, restaurants, activités de loisirs ; toutes les infos utiles à télécharger.</p>
-                        <button class="border-2 border-[var(--footer-green)] text-white font-semibold py-2 px-6 rounded-md hover:bg-[var(--footer-green)] transition-colors">CONSULTER</button>
+                        <a href="#brochures" class="nav-link border-2 border-[var(--footer-green)] text-white font-semibold py-2 px-6 rounded-md hover:bg-[var(--footer-green)] transition-colors inline-block">CONSULTER</a>
                     </div>
                     <div>
                         <h4 class="font-bold text-white mb-3">ESPACE PRO</h4>
@@ -281,7 +306,6 @@
                 <div class="border-t border-gray-700 pt-8">
                     <div class="flex flex-col md:flex-row justify-between items-center">
                         <div class="flex items-center space-x-4 mb-6 md:mb-0">
-                            <!-- Placeholder for logos -->
                             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold text-white">SUD</div>
                             <a href="#" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 5.52 4.5 10.02 10 10.02 5.52 0 10-4.5 10-10.02C22 6.53 17.52 2.04 12 2.04zM16.5 8.25h-1.88c-.56 0-.63.27-.63.62v1.13h2.5l-.34 2.5h-2.16v6.5h-2.6V12.5H9.5V10h2.13V8.75c0-2.12 1.3-3.25 3.16-3.25H16.5v2.5z"/></svg></a>
                             <a href="#" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c2.72 0 3.05.01 4.12.06 1.06.05 1.79.22 2.42.46.65.25 1.13.59 1.62 1.08.49.49.83.97 1.08 1.62.24.63.41 1.36.46 2.42.05 1.07.06 1.4.06 4.12s-.01 3.05-.06 4.12c-.05 1.06-.22 1.79-.46 2.42a4.92 4.92 0 01-1.08 1.62c-.49.49-.97.83-1.62 1.08-1.28.5-4.24.46-8.24 0-1.06-.05-1.79-.22-2.42-.46a4.92 4.92 0 01-1.62-1.08c-.49-.49-.83-.97-1.08-1.62-.24-.63-.41-1.36-.46-2.42C2.01 15.05 2 14.72 2 12s.01-3.05.06-4.12c.05-1.06.22-1.79.46-2.42.25-.65.59-1.13 1.08-1.62.49-.49.97-.83 1.62-1.08.63-.24 1.36-.41 2.42-.46C8.95 2.01 9.28 2 12 2zm0 1.8c-2.65 0-2.96.01-4 .06-1.02.05-1.58.21-1.96.37-.47.18-.82.43-1.19.8-.37.37-.62.72-.8 1.19-.16.38-.32.94-.37 1.96-.05 1.04-.06 1.35-.06 4s.01 2.96.06 4c.05 1.02.21 1.58.37 1.96.18.47.43.82.8 1.19.37.37.72.62 1.19.8.38.16.94.32 1.96.37 1.04.05 1.35.06 4 .06s2.96-.01 4-.06c1.02-.05 1.58-.21 1.96-.37.47-.18.82-.43 1.19-.8.37-.37.62-.72.8-1.19.16-.38.32-.94.37-1.96.05-1.04.06-1.35.06-4s-.01-2.96-.06-4c-.05-1.02-.21-1.58-.37-1.96-.18-.47-.43-.82-.8-1.19-.37-.37-.72-.62-1.19-.8-.38-.16-.94-.32-1.96-.37-1.04-.05-1.35-.06-4-.06zm0 4.7a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm0 1.8a3.7 3.7 0 110 7.4 3.7 3.7 0 010-7.4zm6.3-4.4a1.35 1.35 0 100 2.7 1.35 1.35 0 000-2.7z"/></svg></a>
@@ -357,6 +381,7 @@
 
             // --- Dynamic Agenda ---
             const agendaContainer = document.getElementById('agenda-content');
+            const eventTicker = document.querySelector('#event-ticker marquee'); // Sélectionne la marquee
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Normalize today's date
 
@@ -399,7 +424,29 @@
                 }
                 
                 agendaContainer.innerHTML = html;
+
+                // Remplir le message défilant
+                if (eventTicker) {
+                    eventTicker.innerHTML = ''; // Nettoie le contenu précédent
+                    const tickerEvents = happeningNow.concat(upcoming.slice(0, 3)); // 3 prochains événements max
+                    if (tickerEvents.length > 0) {
+                        tickerEvents.forEach((event, index) => {
+                            const dateString = new Date(event.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+                            eventTicker.innerHTML += `<span class="mx-6">${dateString} : ${event.title} - ${event.location}</span>`;
+                            if (index < tickerEvents.length - 1) {
+                                eventTicker.innerHTML += ' • '; // Séparateur
+                            }
+                        });
+                    } else {
+                        eventTicker.innerHTML = "Pas d'événements à venir pour le moment, restez connecté !";
+                    }
+                }
             }
+
+            // Ajoutez l'écouteur d'événement pour le clic sur le message défilant
+            document.getElementById('event-ticker').addEventListener('click', () => {
+                showPage('agenda'); // Redirige vers la page agenda
+            });
 
             function createEventCard(event, isHappeningNow) {
                 const eventDate = new Date(event.date);
