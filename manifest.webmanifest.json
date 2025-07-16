@@ -1,6 +1,7 @@
 {
   "name": "Destination Sud Réunion",
   "short_name": "Sud Réunion",
+  "description": "Découverte touristique du Sud de La Réunion",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
