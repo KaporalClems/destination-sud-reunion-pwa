@@ -1,39 +1,457 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#009688" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" href="assets/icon-192.png" />
-  <title>Destination Sud Réunion</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destination Sud Réunion</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+    <!-- PWA Manifest (for "Add to Homescreen") -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#234b98">
+
+    <style>
+        /* Custom styles for the app */
+        html, body {
+            height: 100%;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Colors from the logo */
+        :root {
+            --dsr-red: #d93439;
+            --dsr-orange: #f49021;
+            --dsr-light-blue: #24a3db;
+            --dsr-dark-blue: #234b98;
+            --footer-bg: #222222;
+            --footer-text: #cccccc;
+            --footer-green: #94c120;
+        }
+
+        /* Loading screen animation */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fff; display: flex; justify-content: center;
+            align-items: center; z-index: 10000; transition: opacity 0.5s ease-out;
+        }
+        #loader img {
+            width: 150px; animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); } 50% { transform: scale(1.05); } 100% { transform: scale(0.95); }
+        }
+
+        /* Main content should grow to push footer down */
+        #app {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex-grow: 1;
+        }
+
+        /* Helper class to hide elements */
+        .hidden-page { display: none; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--dsr-dark-blue); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--dsr-light-blue); }
+
+        /* Chatbot styling */
+        .chat-message { max-width: 80%; }
+        .chat-user { background-color: var(--dsr-dark-blue); color: white; align-self: flex-end; }
+        .chat-bot { background-color: #e5e7eb; color: #1f2937; align-self: flex-start; }
+        
+        /* Gradient text for titles */
+        .gradient-text {
+            background: linear-gradient(to right, var(--dsr-red), var(--dsr-orange), var(--dsr-light-blue), var(--dsr-dark-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; text-fill-color: transparent;
+        }
+
+        /* Homepage Carousel */
+        #home-carousel {
+            position: relative;
+            height: 60vh;
+            min-height: 400px;
+            width: 100%;
+            overflow: hidden;
+        }
+        #home-carousel .carousel-image {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 1;
+        }
+        #home-carousel .carousel-image.active {
+            opacity: 1;
+        }
+        #home-carousel .carousel-overlay {
+            position: relative;
+            z-index: 2;
+            background: rgba(0,0,0,0.4);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+    </style>
 </head>
-<body>
-  <header>
-    <img src="assets/logo.png" alt="Logo Destination Sud Réunion" class="logo" />
-    <h1>Destination Sud Réunion</h1>
-  </header>
+<body class="bg-gray-50 text-gray-800">
 
-  <nav>
-    <ul>
-      <li><a href="#">Accueil</a></li>
-      <li><a href="#">Carte</a></li>
-      <li><a href="#">Événements</a></li>
-      <li><a href="#">Météo</a></li>
-      <li><a href="#">Profil</a></li>
-    </ul>
-  </nav>
+    <!-- Animated Loading Screen -->
+    <div id="loader">
+        <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion">
+    </div>
 
-  <main>
-    <h2>Bienvenue dans le Sud de La Réunion 🌴</h2>
-    <p>Découvrez les plus beaux sites, activités et événements autour de vous.</p>
-  </main>
+    <!-- Main Application Wrapper -->
+    <div id="app" class="opacity-0 transition-opacity duration-500">
+        
+        <!-- Header -->
+        <header class="bg-white shadow-md sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <a href="#accueil" class="nav-link"><img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo DSR" class="h-10 md:h-12"></a>
+                <button id="menu-button" class="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dsr-dark-blue)]">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="#accueil" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Accueil</a>
+                    <a href="#agenda" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Agenda</a>
+                    <a href="#hebergements" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Hébergements</a>
+                    <a href="#restaurants" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Restaurants</a>
+                    <a href="#activites" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Activités</a>
+                    <a href="#visites" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Visites</a>
+                </nav>
+            </div>
+        </header>
 
-  <footer>
-    <p>© 2025 Office de Tourisme Sud Réunion</p>
-  </footer>
+        <!-- Mobile Menu (Overlay) -->
+        <div id="mobile-menu" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+            <div class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl p-6 transform translate-x-full transition-transform duration-300 ease-in-out">
+                <button id="close-menu-button" class="absolute top-4 right-4 p-2">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                <nav class="mt-12 flex flex-col space-y-6">
+                    <a href="#accueil" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">home</span><span>Accueil</span></a>
+                    <a href="#agenda" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">event</span><span>Agenda</span></a>
+                    <a href="#hebergements" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">hotel</span><span>Hébergements</span></a>
+                    <a href="#restaurants" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">restaurant</span><span>Restaurants</span></a>
+                    <a href="#activites" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">surfing</span><span>Activités</span></a>
+                    <a href="#visites" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">local_see</span><span>Visites</span></a>
+                </nav>
+            </div>
+        </div>
 
-  <script src="js/app.js"></script>
+        <!-- Main Content Area -->
+        <main>
+            <!-- Page: Accueil -->
+            <div id="page-accueil" class="page">
+                <div id="home-carousel">
+                    <div class="carousel-image active" style="background-image: url('https://www.sudreuniontourisme.fr/fileadmin/_processed_/9/9/csm_BrasEtangs-VueGdBenare-1_cbb4280c3f.jpg');"></div>
+                    <div class="carousel-image" style="background-image: url('https://www.sudreuniontourisme.fr/fileadmin/_processed_/d/0/csm_redim_volcan_2015_FRT-Gaby_Barathieu_8_fev_2019_1bf394bc18.jpg');"></div>
+                    <div class="carousel-image" style="background-image: url('https://www.sudreuniontourisme.fr/fileadmin/_processed_/c/c/csm_randonnee_redim_4ffbef2eae.jpg');"></div>
+                    <div class="carousel-overlay p-4">
+                        <h1 class="text-4xl md:text-6xl font-black mb-4 text-white drop-shadow-lg">Explorez le Sud Sauvage</h1>
+                        <p class="text-lg text-gray-200 max-w-2xl mx-auto drop-shadow-md">Votre aventure inoubliable à La Réunion commence ici.</p>
+                    </div>
+                </div>
+                <div class="container mx-auto p-4 md:p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <a href="#hebergements" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
+                            <img src="https://images.unsplash.com/photo-1582610285924-f03d7d95620f?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Hébergement">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Hébergements</h2></div>
+                        </a>
+                        <a href="#restaurants" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
+                            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1974&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Restaurant">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Restaurants</h2></div>
+                        </a>
+                        <a href="#activites" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
+                            <img src="https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Activité">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Activités</h2></div>
+                        </a>
+                         <a href="#visites" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
+                            <img src="https://images.unsplash.com/photo-1590425495221-34539a265436?q=80&w=1964&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Visite">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Visites</h2></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page: Agenda -->
+            <div id="page-agenda" class="page hidden-page container mx-auto p-4 md:p-8">
+                <h2 class="text-3xl font-bold mb-8 gradient-text">Agenda des Événements</h2>
+                <div id="agenda-content"></div>
+            </div>
+
+            <!-- Other Pages -->
+            <div id="page-hebergements" class="page hidden-page container mx-auto p-4 md:p-8">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Nos Hébergements</h2>
+                <p>Contenu de la page des hébergements...</p>
+            </div>
+            <div id="page-restaurants" class="page hidden-page container mx-auto p-4 md:p-8">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Où se restaurer ?</h2>
+                <p>Contenu de la page des restaurants...</p>
+            </div>
+            <div id="page-activites" class="page hidden-page container mx-auto p-4 md:p-8">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Activités & Loisirs</h2>
+                <p>Contenu de la page des activités...</p>
+            </div>
+            <div id="page-visites" class="page hidden-page container mx-auto p-4 md:p-8">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Visites & Découvertes</h2>
+                <p>Contenu de la page des visites...</p>
+            </div>
+
+            <!-- Page: Connexion Professionnel -->
+            <div id="page-connexion" class="page hidden-page container mx-auto p-4 md:p-8">
+                 <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
+                    <div class="text-center mb-8">
+                        <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo DSR" class="h-12 mx-auto mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Espace Professionnel</h2>
+                        <p class="text-gray-500">Connectez-vous pour gérer votre profil.</p>
+                    </div>
+                    <form>
+                        <div class="mb-4">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--dsr-light-blue)] focus:border-[var(--dsr-light-blue)]" placeholder="vous@exemple.com">
+                        </div>
+                        <div class="mb-6">
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                            <input type="password" id="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--dsr-light-blue)] focus:border-[var(--dsr-light-blue)]" placeholder="********">
+                        </div>
+                        <button type="submit" class="w-full bg-[var(--dsr-dark-blue)] text-white font-bold py-3 px-4 rounded-lg hover:bg-[var(--dsr-light-blue)] transition-colors duration-300">Connexion</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Chatbot -->
+        <button id="chat-fab" class="fixed bottom-28 right-6 bg-[var(--dsr-dark-blue)] text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-[var(--dsr-light-blue)] transition-transform hover:scale-110 z-40">
+            <span class="material-symbols-outlined text-3xl">support_agent</span>
+        </button>
+        <div id="chat-window" class="fixed bottom-48 right-6 w-80 h-96 bg-white rounded-xl shadow-2xl flex flex-col hidden z-40">
+            <div class="bg-[var(--dsr-dark-blue)] text-white p-3 rounded-t-xl flex justify-between items-center"><h3 class="font-bold">Assistant DSR</h3><button id="close-chat" class="text-white">&times;</button></div>
+            <div id="chat-messages" class="flex-1 p-3 overflow-y-auto flex flex-col space-y-2"></div>
+            <div class="p-3 border-t"><div class="flex space-x-2"><input type="text" id="chat-input" placeholder="Posez votre question..." class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--dsr-light-blue)]"><button id="chat-send" class="bg-[var(--dsr-orange)] text-white rounded-full p-2"><span class="material-symbols-outlined">send</span></button></div></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-[var(--footer-bg)] text-[var(--footer-text)] mt-auto py-10 px-4">
+            <div class="container mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left mb-8">
+                    <div>
+                        <h4 class="font-bold text-white mb-3">LES OFFICES DE TOURISME DU SUD</h4>
+                        <p class="text-sm mb-4">Nos conseillers en séjour vous apportent leur fine connaissance du Sud et de la Réunion pour organiser vos circuits et visites, et réserver vos prestations.</p>
+                        <button class="border-2 border-[var(--footer-green)] text-white font-semibold py-2 px-6 rounded-md hover:bg-[var(--footer-green)] transition-colors">NOUS RENDRE VISITE</button>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-3">NOS BROCHURES</h4>
+                        <p class="text-sm mb-4">De bonnes idées pour votre séjour : sites touristiques, hébergements, restaurants, activités de loisirs ; toutes les infos utiles à télécharger.</p>
+                        <button class="border-2 border-[var(--footer-green)] text-white font-semibold py-2 px-6 rounded-md hover:bg-[var(--footer-green)] transition-colors">CONSULTER</button>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-3">ESPACE PRO</h4>
+                        <p class="text-sm mb-4">Pour les professionnels du Tourisme : connectez-vous à cet espace dédié pour accéder aux services que nous vous proposons.</p>
+                        <a href="#connexion" class="nav-link border-2 border-[var(--footer-green)] text-white font-semibold py-2 px-6 rounded-md hover:bg-[var(--footer-green)] transition-colors inline-block">SE CONNECTER</a>
+                    </div>
+                </div>
+                <div class="border-t border-gray-700 pt-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="flex items-center space-x-4 mb-6 md:mb-0">
+                            <!-- Placeholder for logos -->
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold text-white">SUD</div>
+                            <a href="#" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 5.52 4.5 10.02 10 10.02 5.52 0 10-4.5 10-10.02C22 6.53 17.52 2.04 12 2.04zM16.5 8.25h-1.88c-.56 0-.63.27-.63.62v1.13h2.5l-.34 2.5h-2.16v6.5h-2.6V12.5H9.5V10h2.13V8.75c0-2.12 1.3-3.25 3.16-3.25H16.5v2.5z"/></svg></a>
+                            <a href="#" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c2.72 0 3.05.01 4.12.06 1.06.05 1.79.22 2.42.46.65.25 1.13.59 1.62 1.08.49.49.83.97 1.08 1.62.24.63.41 1.36.46 2.42.05 1.07.06 1.4.06 4.12s-.01 3.05-.06 4.12c-.05 1.06-.22 1.79-.46 2.42a4.92 4.92 0 01-1.08 1.62c-.49.49-.97.83-1.62 1.08-1.28.5-4.24.46-8.24 0-1.06-.05-1.79-.22-2.42-.46a4.92 4.92 0 01-1.62-1.08c-.49-.49-.83-.97-1.08-1.62-.24-.63-.41-1.36-.46-2.42C2.01 15.05 2 14.72 2 12s.01-3.05.06-4.12c.05-1.06.22-1.79.46-2.42.25-.65.59-1.13 1.08-1.62.49-.49.97-.83 1.62-1.08.63-.24 1.36-.41 2.42-.46C8.95 2.01 9.28 2 12 2zm0 1.8c-2.65 0-2.96.01-4 .06-1.02.05-1.58.21-1.96.37-.47.18-.82.43-1.19.8-.37.37-.62.72-.8 1.19-.16.38-.32.94-.37 1.96-.05 1.04-.06 1.35-.06 4s.01 2.96.06 4c.05 1.02.21 1.58.37 1.96.18.47.43.82.8 1.19.37.37.72.62 1.19.8.38.16.94.32 1.96.37 1.04.05 1.35.06 4 .06s2.96-.01 4-.06c1.02-.05 1.58-.21 1.96-.37.47-.18.82-.43 1.19-.8.37-.37.62-.72.8-1.19.16-.38.32-.94.37-1.96.05-1.04.06-1.35.06-4s-.01-2.96-.06-4c-.05-1.02-.21-1.58-.37-1.96-.18-.47-.43-.82-.8-1.19-.37-.37-.72-.62-1.19-.8-.38-.16-.94-.32-1.96-.37-1.04-.05-1.35-.06-4-.06zm0 4.7a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm0 1.8a3.7 3.7 0 110 7.4 3.7 3.7 0 010-7.4zm6.3-4.4a1.35 1.35 0 100 2.7 1.35 1.35 0 000-2.7z"/></svg></a>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+                            <a href="#" class="hover:text-white">Contactez-nous</a>
+                            <a href="#" class="hover:text-white">Newsletter</a>
+                            <a href="#" class="hover:text-white">Le Sud s'engage</a>
+                            <a href="#" class="hover:text-white">Mentions légales</a>
+                            <a href="#" class="hover:text-white">Politique de confidentialité</a>
+                            <a href="#" class="hover:text-white">Plan du site</a>
+                            <a href="#connexion" class="nav-link font-bold text-white">Espace presse</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- App Initialization ---
+            const loader = document.getElementById('loader');
+            const app = document.getElementById('app');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                app.style.opacity = '1';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 1500);
+
+            // --- Page Navigation ---
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+            function showPage(pageId) {
+                pages.forEach(page => page.id === `page-${pageId}` ? page.classList.remove('hidden-page') : page.classList.add('hidden-page'));
+                window.scrollTo(0, 0);
+            }
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('href').substring(1);
+                    showPage(pageId);
+                    closeMobileMenu();
+                });
+            });
+            showPage('accueil');
+            
+            // --- Mobile Menu ---
+            const menuButton = document.getElementById('menu-button');
+            const closeMenuButton = document.getElementById('close-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuContent = mobileMenu.querySelector('div');
+            function openMobileMenu() {
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => mobileMenuContent.classList.remove('translate-x-full'), 10);
+            }
+            function closeMobileMenu() {
+                mobileMenuContent.classList.add('translate-x-full');
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+            }
+            menuButton.addEventListener('click', openMobileMenu);
+            closeMenuButton.addEventListener('click', closeMobileMenu);
+            mobileMenu.addEventListener('click', (e) => e.target === mobileMenu && closeMobileMenu());
+
+            // --- Homepage Carousel ---
+            const carouselImages = document.querySelectorAll('#home-carousel .carousel-image');
+            let currentImageIndex = 0;
+            setInterval(() => {
+                carouselImages[currentImageIndex].classList.remove('active');
+                currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
+                carouselImages[currentImageIndex].classList.add('active');
+            }, 5000);
+
+            // --- Dynamic Agenda ---
+            const agendaContainer = document.getElementById('agenda-content');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize today's date
+
+            const events = [
+                { title: 'Festival Sakifo', date: '2025-06-07', location: 'Saint-Pierre', description: 'Grand festival de musique des musiques du monde.' },
+                { title: 'Grand Raid', date: '2025-10-17', location: 'Départ de Saint-Pierre', description: 'La Diagonale des Fous, un ultra-trail de renommée mondiale.' },
+                { title: `Marché de Nuit de Saint-Pierre`, date: new Date().toISOString().slice(0, 10), location: 'Front de mer', description: 'Artisanat local, saveurs créoles et ambiance festive.' },
+                { title: 'Fête du Curcuma', date: '2025-11-05', location: 'Plaine des Grègues', description: 'Célébration de l\'"or jaune" de la Réunion.' },
+                { title: 'Exposition Volcans', date: '2025-08-01', location: 'Cité du Volcan', description: 'Nouvelle exposition immersive sur les volcans du monde.' },
+            ];
+            
+            function renderAgenda() {
+                const happeningNow = [];
+                const upcoming = [];
+
+                events.forEach(event => {
+                    const eventDate = new Date(event.date);
+                    if (eventDate.getTime() === today.getTime()) {
+                        happeningNow.push(event);
+                    } else if (eventDate > today) {
+                        upcoming.push(event);
+                    }
+                });
+                
+                upcoming.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+                let html = '';
+                if (happeningNow.length > 0) {
+                    html += '<h3 class="text-2xl font-bold mb-4 text-[var(--dsr-red)]">En ce moment</h3>';
+                    html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">';
+                    happeningNow.forEach(event => html += createEventCard(event, true));
+                    html += '</div>';
+                }
+
+                if (upcoming.length > 0) {
+                    html += '<h3 class="text-2xl font-bold mb-4 text-[var(--dsr-dark-blue)]">À venir</h3>';
+                    html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
+                    upcoming.forEach(event => html += createEventCard(event, false));
+                    html += '</div>';
+                }
+                
+                agendaContainer.innerHTML = html;
+            }
+
+            function createEventCard(event, isHappeningNow) {
+                const eventDate = new Date(event.date);
+                const dateString = eventDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+                const cardColor = isHappeningNow ? 'border-[var(--dsr-red)]' : 'border-gray-200';
+                return `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border-l-4 ${cardColor}">
+                        <div class="p-5">
+                            <p class="text-sm font-semibold ${isHappeningNow ? 'text-[var(--dsr-red)]' : 'text-[var(--dsr-dark-blue)]'}">${dateString}</p>
+                            <h4 class="font-bold text-xl my-1">${event.title}</h4>
+                            <p class="text-gray-500 text-sm mb-2"><span class="material-symbols-outlined text-sm align-middle">location_on</span> ${event.location}</p>
+                            <p class="text-gray-600">${event.description}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            renderAgenda();
+
+            // --- Chatbot ---
+            const chatFab = document.getElementById('chat-fab');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChat = document.getElementById('close-chat');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            chatFab.addEventListener('click', () => chatWindow.classList.toggle('hidden'));
+            closeChat.addEventListener('click', () => chatWindow.classList.add('hidden'));
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = text;
+                messageDiv.className = `p-2 rounded-lg chat-message ${sender === 'user' ? 'chat-user' : 'chat-bot'}`;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            function handleSendMessage() {
+                const userText = chatInput.value.trim();
+                if (userText) {
+                    addMessage(userText, 'user');
+                    chatInput.value = '';
+                    setTimeout(() => {
+                        let botResponse = "Je ne suis pas sûr de comprendre. Essayez 'agenda', 'hôtel' ou 'restaurant'.";
+                        if (userText.toLowerCase().includes('bonjour')) botResponse = "Bonjour ! Comment puis-je vous aider ?";
+                        else if (userText.toLowerCase().includes('agenda') || userText.toLowerCase().includes('événement')) botResponse = "Consultez notre page 'Agenda' pour voir tous les événements à venir !";
+                        else if (userText.toLowerCase().includes('hôtel') || userText.toLowerCase().includes('hébergement')) botResponse = "Rendez-vous dans la section 'Hébergements' pour trouver le lieu parfait pour votre séjour.";
+                        addMessage(botResponse, 'bot');
+                    }, 1000);
+                }
+            }
+            chatSend.addEventListener('click', handleSendMessage);
+            chatInput.addEventListener('keypress', (e) => e.key === 'Enter' && handleSendMessage());
+            setTimeout(() => addMessage('Bonjour ! Je suis l\'assistant virtuel de DSR. Posez-moi une question !', 'bot'), 2000);
+        });
+    </script>
 </body>
 </html>
