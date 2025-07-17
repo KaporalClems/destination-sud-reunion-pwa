@@ -115,12 +115,55 @@
             text-align: center;
             color: white;
         }
+
+        /* Notification Pop-up (iOS style) */
+        .notification-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            max-width: 90%;
+            cursor: pointer;
+        }
+        .notification-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .notification-popup .icon {
+            margin-right: 10px;
+        }
+        .notification-popup .title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 2px;
+        }
+        .notification-popup .message {
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
     <div id="loader">
         <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion">
+    </div>
+
+    <div id="notification-popup" class="notification-popup">
+        <span class="material-symbols-outlined icon">event</span>
+        <div>
+            <div class="title" id="notification-title"></div>
+            <div class="message" id="notification-message"></div>
+        </div>
     </div>
 
     <div id="app" class="opacity-0 transition-opacity duration-500">
@@ -138,6 +181,7 @@
                     <a href="#restaurants" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Restaurants</a>
                     <a href="#activites" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Activités</a>
                     <a href="#visites" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Visites</a>
+                    <a href="#nous-rendre-visite" class="nav-link text-gray-600 hover:text-[var(--dsr-dark-blue)] font-semibold">Nous rendre visite</a>
                 </nav>
             </div>
         </header>
@@ -154,6 +198,7 @@
                     <a href="#restaurants" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">restaurant</span><span>Restaurants</span></a>
                     <a href="#activites" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">surfing</span><span>Activités</span></a>
                     <a href="#visites" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">local_see</span><span>Visites</span></a>
+                    <a href="#nous-rendre-visite" class="mobile-nav-link flex items-center space-x-3 text-lg font-semibold text-gray-700 hover:text-[var(--dsr-dark-blue)]"><span class="material-symbols-outlined">map</span><span>Nous rendre visite</span></a>
                 </nav>
             </div>
         </div>
@@ -167,6 +212,9 @@
                     <div class="carousel-overlay p-4">
                         <h1 class="text-4xl md:text-6xl font-black mb-4 text-white drop-shadow-lg">Explorez le Sud Sauvage</h1>
                         <p class="text-lg text-gray-200 max-w-2xl mx-auto drop-shadow-md">Votre aventure inoubliable à La Réunion commence ici.</p>
+                        <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/reserver-mes-activites', '_blank')" class="mt-8 bg-[var(--dsr-red)] text-white px-8 py-3 rounded-full text-lg font-bold hover:bg-[var(--dsr-orange)] transition-colors duration-300 shadow-lg">
+                            Réserver maintenant
+                        </button>
                     </div>
                 </div>
 
@@ -178,7 +226,7 @@
                 <div class="container mx-auto p-4 md:p-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <a href="#hebergements" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
-                            <img src="https://www.sudreuniontourisme.fr/fileadmin/user_upload/Sud/Informations/sudreunion_reservationhebergement.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Hébergement">
+                            <img src="https://images.unsplash.com/photo-1582610285924-f03d7d95620f?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Hébergement">
                             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Hébergements</h2></div>
                         </a>
                         <a href="#restaurants" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
@@ -186,11 +234,11 @@
                             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Restaurants</h2></div>
                         </a>
                         <a href="#activites" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
-                            <img src="https://www.sudreuniontourisme.fr/fileadmin/user_upload/Sud/Informations/sudreunion_reservationactivite.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Activité">
+                            <img src="https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Activité">
                             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Activités</h2></div>
                         </a>
                            <a href="#visites" class="nav-link group block relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-64">
-                                <img src="https://www.sudreuniontourisme.fr/fileadmin/_processed_/e/9/csm_visite_sagarhum_c1f16a88b9.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Visites">
+                                <img src="https://images.unsplash.com/photo-1590425495221-34539a265436?q=80&w=1964&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" alt="Visite">
                                 <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-6"><h2 class="text-white text-2xl font-bold">Visites</h2></div>
                         </a>
                     </div>
@@ -230,20 +278,156 @@
             </div>
 
             <div id="page-hebergements" class="page hidden-page container mx-auto p-4 md:p-8">
-                <h2 class="text-3xl font-bold mb-6 gradient-text">Nos Hébergements</h2>
-                <p>Contenu de la page des hébergements...</p>
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Trouvez votre Hébergement Idéal</h2>
+                <p class="mb-6 text-gray-700">Découvrez une large sélection d'hébergements dans le Sud de La Réunion, des hôtels de luxe aux gîtes charmants, pour un séjour inoubliable.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1566073771259-d3420317e4d7?q=80&w=2070&auto=format&fit=crop" alt="Hôtel Vue Mer" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Le Grand Hôtel du Lagon</h3>
+                            <p class="text-gray-600 text-sm mb-3">★★★★☆ Saint-Pierre</p>
+                            <p class="text-gray-700 mb-4">Hôtel de standing avec piscine et accès direct à la plage. Idéal pour les familles ou les couples.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/ou-dormir', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                En savoir plus
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1582719508461-905c67377102?q=80&w=2070&auto=format&fit=crop" alt="Gîte Rural" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Gîte Créole Les Flamboyants</h3>
+                            <p class="text-gray-600 text-sm mb-3">★★★☆☆ Entre-Deux</p>
+                            <p class="text-gray-700 mb-4">Un charmant gîte typique au cœur des paysages verdoyants. Parfait pour les amoureux de la nature.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/ou-dormir', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                En savoir plus
+                            </button>
+                        </div>
+                    </div>
+                    </div>
             </div>
+
             <div id="page-restaurants" class="page hidden-page container mx-auto p-4 md:p-8">
-                <h2 class="text-3xl font-bold mb-6 gradient-text">Où se restaurer ?</h2>
-                <p>Contenu de la page des restaurants...</p>
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Où se régaler dans le Sud ?</h2>
+                <p class="mb-6 text-gray-700">Explorez les saveurs de La Réunion avec notre sélection de restaurants, des tables gastronomiques aux petits "snacks" créoles authentiques.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1552504886-27a3c3937989?q=80&w=2070&auto=format&fit=crop" alt="Restaurant Créole" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Le Bistrot Créole</h3>
+                            <p class="text-gray-600 text-sm mb-3">Spécialités locales • Saint-Joseph</p>
+                            <p class="text-gray-700 mb-4">Goûtez aux caris traditionnels et rougails dans une ambiance chaleureuse et conviviale.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/ou-manger', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                Voir le menu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop" alt="Restaurant Panoramique" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">La Table du Piton</h3>
+                            <p class="text-gray-600 text-sm mb-3">Cuisine française et créole • La Plaine des Cafres</p>
+                            <p class="text-gray-700 mb-4">Un cadre exceptionnel avec vue sur le Piton de la Fournaise, pour une cuisine raffinée.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/ou-manger', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                Voir le menu
+                            </button>
+                        </div>
+                    </div>
+                    </div>
             </div>
+
             <div id="page-activites" class="page hidden-page container mx-auto p-4 md:p-8">
-                <h2 class="text-3xl font-bold mb-6 gradient-text">Activités & Loisirs</h2>
-                <p>Contenu de la page des activités...</p>
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Activités & Loisirs Inoubliables</h2>
+                <p class="mb-6 text-gray-700">Que vous soyez à la recherche d'aventure, de détente ou de découverte culturelle, le Sud de La Réunion regorge d'activités pour tous les goûts !</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?q=80&w=2070&auto=format&fit=crop" alt="Randonnée Volcan" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Randonnée au Piton de la Fournaise</h3>
+                            <p class="text-gray-600 text-sm mb-3">Niveau : Modéré • Durée : Journée</p>
+                            <p class="text-gray-700 mb-4">Explorez les paysages lunaires de l'un des volcans les plus actifs du monde.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/que-faire-activites-loisirs', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                En savoir plus
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1627931327142-b063d3a04f9e?q=80&w=2070&auto=format&fit=crop" alt="Plongée sous-marine" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Plongée sous-marine à Saint-Pierre</h3>
+                            <p class="text-gray-600 text-sm mb-3">Débutant ou Confirmé • Durée : 2h</p>
+                            <p class="text-gray-700 mb-4">Découvrez les fonds marins exceptionnels du lagon sud, ses coraux et poissons tropicaux.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/que-faire-activites-loisirs', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                En savoir plus
+                            </button>
+                        </div>
+                    </div>
+                    </div>
             </div>
+
             <div id="page-visites" class="page hidden-page container mx-auto p-4 md:p-8">
-                <h2 class="text-3xl font-bold mb-6 gradient-text">Visites & Découvertes</h2>
-                <p>Contenu de la page des visites...</p>
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Sites & Musées à Visiter</h2>
+                <p class="mb-6 text-gray-700">Imprégnez-vous de la culture et de l'histoire du Sud de La Réunion en visitant ses lieux emblématiques et ses musées passionnants.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1590425495221-34539a265436?q=80&w=1964&auto=format&fit=crop" alt="Cité du Volcan" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">La Cité du Volcan</h3>
+                            <p class="text-gray-600 text-sm mb-3">Musée interactif • Bourg-Murat</p>
+                            <p class="text-gray-700 mb-4">Un musée moderne pour tout savoir sur l'histoire volcanique de l'île et le Piton de la Fournaise.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/incontournables', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                Plus d'infos
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <img src="https://images.unsplash.com/photo-1627068222956-6d6f2e8f23f3?q=80&w=2070&auto=format&fit=crop" alt="Jardin des Parfums et des Épices" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Jardin des Parfums et des Épices</h3>
+                            <p class="text-gray-600 text-sm mb-3">Jardin botanique • Saint-Philippe</p>
+                            <p class="text-gray-700 mb-4">Une immersion sensorielle au cœur de la flore réunionnaise, entre senteurs et saveurs exotiques.</p>
+                            <button onclick="window.open('https://www.sudreuniontourisme.fr/preparer-mon-sejour/incontournables', '_blank')" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                                Plus d'infos
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+
+            <div id="page-nous-rendre-visite" class="page hidden-page container mx-auto p-4 md:p-8">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Nos Offices de Tourisme</h2>
+                <p class="mb-6 text-gray-700">Venez nous rencontrer dans l'un de nos points d'accueil pour obtenir des conseils personnalisés, des cartes et des brochures pour votre séjour.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
+                        <h3 class="font-bold text-xl mb-2">Office de Tourisme de Saint-Pierre</h3>
+                        <p class="text-gray-600 mb-2 flex items-center"><span class="material-symbols-outlined text-base mr-2">location_on</span> 12 Rue du Port, 97410 Saint-Pierre</p>
+                        <p class="text-gray-600 mb-2 flex items-center"><span class="material-symbols-outlined text-base mr-2">call</span> 0262 35 35 35</p>
+                        <p class="text-gray-600 mb-4 flex items-center"><span class="material-symbols-outlined text-base mr-2">schedule</span> Lun-Sam : 9h-17h</p>
+                        <div class="h-64 bg-gray-200 rounded-lg overflow-hidden mb-4">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.684534151322!2d55.47466097519133!3d-21.34114228053744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2182bb1978280629%3A0x6b8d4c32b504285b!2sOffice%20de%20Tourisme%20Intercommunal%20du%20Sud!5e0!3m2!1sfr!2sre!4v1700000000000!5m2!1sfr!2sre" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                        <a href="https://maps.app.goo.gl/YourGoogleMapsLink" target="_blank" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                            <span class="material-symbols-outlined text-base mr-2">directions_walk</span> Itinéraire
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
+                        <h3 class="font-bold text-xl mb-2">Office de Tourisme de Saint-Philippe</h3>
+                        <p class="text-gray-600 mb-2 flex items-center"><span class="material-symbols-outlined text-base mr-2">location_on</span> 2 Rue Leconte de Lisle, 97442 Saint-Philippe</p>
+                        <p class="text-gray-600 mb-2 flex items-center"><span class="material-symbols-outlined text-base mr-2">call</span> 0262 37 30 30</p>
+                        <p class="text-600 mb-4 flex items-center"><span class="material-symbols-outlined text-base mr-2">schedule</span> Mar-Sam : 9h-12h / 14h-17h</p>
+                        <div class="h-64 bg-gray-200 rounded-lg overflow-hidden mb-4">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.684534151322!2d55.47466097519133!3d-21.34114228053744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2182bb1978280629%3A0x6b8d4c32b504285b!2sOffice%20de%20Tourisme%20Intercommunal%20du%20Sud!5e0!3m2!1sfr!2sre!4v1700000000000!5m2!1sfr!2sre" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                        <a href="https://maps.app.goo.gl/AnotherGoogleMapsLink" target="_blank" class="bg-[var(--dsr-dark-blue)] text-white px-4 py-2 rounded-md hover:bg-[var(--dsr-light-blue)] transition-colors inline-flex items-center">
+                            <span class="material-symbols-outlined text-base mr-2">directions_walk</span> Itinéraire
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div id="page-connexion" class="page hidden-page container mx-auto p-4 md:p-8">
@@ -290,7 +474,7 @@
                     <div>
                         <h4 class="font-bold text-white mb-3">LES OFFICES DE TOURISME DU SUD</h4>
                         <p class="text-sm mb-4">Nos conseillers en séjour vous apportent leur fine connaissance du Sud et de la Réunion pour organiser vos circuits et visites, et réserver vos prestations.</p>
-                        <button class="border-2 border-[var(--footer-green)] text-white font-semibold py-2 px-6 rounded-md hover:bg-[var(--footer-green)] transition-colors">NOUS RENDRE VISITE</button>
+                        <a href="#nous-rendre-visite" class="nav-link border-2 border-[var(--footer-green)] text-white font-semibold py-2 px-6 rounded-md hover:bg-[var(--footer-green)] transition-colors inline-block">NOUS RENDRE VISITE</a>
                     </div>
                     <div>
                         <h4 class="font-bold text-white mb-3">NOS BROCHURES</h4>
@@ -379,16 +563,19 @@
                 carouselImages[currentImageIndex].classList.add('active');
             }, 5000);
 
-            // --- Dynamic Agenda ---
+            // --- Dynamic Agenda & Event Pop-up ---
             const agendaContainer = document.getElementById('agenda-content');
-            const eventTicker = document.querySelector('#event-ticker marquee'); // Sélectionne la marquee
+            const eventTicker = document.querySelector('#event-ticker marquee');
+            const notificationPopup = document.getElementById('notification-popup');
+            const notificationTitle = document.getElementById('notification-title');
+            const notificationMessage = document.getElementById('notification-message');
             const today = new Date();
-            today.setHours(0, 0, 0, 0); // Normalize today's date
+            today.setHours(0, 0, 0, 0); 
 
             const events = [
                 { title: 'Festival Sakifo', date: '2025-06-07', location: 'Saint-Pierre', description: 'Grand festival de musique des musiques du monde.' },
                 { title: 'Grand Raid', date: '2025-10-17', location: 'Départ de Saint-Pierre', description: 'La Diagonale des Fous, un ultra-trail de renommée mondiale.' },
-                { title: `Marché de Nuit de Saint-Pierre`, date: new Date().toISOString().slice(0, 10), location: 'Front de mer', description: 'Artisanat local, saveurs créoles et ambiance festive.' },
+                { title: `Marché de Nuit de Saint-Pierre`, date: '2025-07-17', location: 'Front de mer', description: 'Artisanat local, saveurs créoles et ambiance festive.' }, // Updated to current date
                 { title: 'Fête du Curcuma', date: '2025-11-05', location: 'Plaine des Grègues', description: 'Célébration de l\'"or jaune" de la Réunion.' },
                 { title: 'Exposition Volcans', date: '2025-08-01', location: 'Cité du Volcan', description: 'Nouvelle exposition immersive sur les volcans du monde.' },
             ];
@@ -399,6 +586,7 @@
 
                 events.forEach(event => {
                     const eventDate = new Date(event.date);
+                    eventDate.setHours(0, 0, 0, 0); // Normalize event date
                     if (eventDate.getTime() === today.getTime()) {
                         happeningNow.push(event);
                     } else if (eventDate > today) {
@@ -427,26 +615,27 @@
 
                 // Remplir le message défilant
                 if (eventTicker) {
-                    eventTicker.innerHTML = ''; // Nettoie le contenu précédent
-                    const tickerEvents = happeningNow.concat(upcoming.slice(0, 3)); // 3 prochains événements max
+                    eventTicker.innerHTML = ''; 
+                    const tickerEvents = happeningNow.concat(upcoming.slice(0, 3)); 
                     if (tickerEvents.length > 0) {
                         tickerEvents.forEach((event, index) => {
                             const dateString = new Date(event.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
                             eventTicker.innerHTML += `<span class="mx-6">${dateString} : ${event.title} - ${event.location}</span>`;
                             if (index < tickerEvents.length - 1) {
-                                eventTicker.innerHTML += ' • '; // Séparateur
+                                eventTicker.innerHTML += ' • '; 
                             }
                         });
                     } else {
                         eventTicker.innerHTML = "Pas d'événements à venir pour le moment, restez connecté !";
                     }
                 }
-            }
 
-            // Ajoutez l'écouteur d'événement pour le clic sur le message défilant
-            document.getElementById('event-ticker').addEventListener('click', () => {
-                showPage('agenda'); // Redirige vers la page agenda
-            });
+                // Afficher la notification pop-up pour le premier événement à venir
+                if (happeningNow.length > 0 || upcoming.length > 0) {
+                    const eventToNotify = happeningNow.length > 0 ? happeningNow[0] : upcoming[0];
+                    showNotification(eventToNotify.title, `${new Date(eventToNotify.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} - ${eventToNotify.location}`);
+                }
+            }
 
             function createEventCard(event, isHappeningNow) {
                 const eventDate = new Date(event.date);
@@ -463,6 +652,25 @@
                     </div>
                 `;
             }
+
+            function showNotification(title, message) {
+                notificationTitle.textContent = title;
+                notificationMessage.textContent = message;
+                notificationPopup.classList.add('show');
+                setTimeout(() => {
+                    notificationPopup.classList.remove('show');
+                }, 5000); // Notification disparaît après 5 secondes
+            }
+
+            document.getElementById('event-ticker').addEventListener('click', () => {
+                showPage('agenda'); 
+            });
+
+            notificationPopup.addEventListener('click', () => {
+                showPage('agenda');
+                notificationPopup.classList.remove('show');
+            });
+
             renderAgenda();
 
             // --- Chatbot ---
