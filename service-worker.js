@@ -1,7 +1,7 @@
 const CACHE_NAME = 'dsr-cache-v1';
 const urlsToCache = [
     '/',
-    '/index.html',
+    '/accueil.html',
     '/manifest.json',
     'https://cdn.tailwindcss.com',
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap',
